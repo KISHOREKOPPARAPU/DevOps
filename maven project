@@ -1,0 +1,21 @@
+pipline {
+agent any {
+stages {
+stages ("checkout) {
+steps {
+echo "kishore"
+}
+}
+stages ("deploy") {
+steps {
+echo "bhagya rekha"
+}
+}
+stages ("build") {
+steps {
+echo "we are lovers"
+}
+}
+}
+}
+}
