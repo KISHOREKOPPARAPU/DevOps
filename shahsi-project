@@ -1,0 +1,29 @@
+pipeline {
+    agent any
+
+    stages {
+        stage('checkout') {
+            steps 
+            {
+                echo 'kishore'
+            }
+        }
+        stage('build')
+        {
+            steps
+            {
+                echo 'shashi'
+            }
+        }
+        stage('deploy')
+        {
+            steps
+            {
+                echo 'madefor each other'
+            }
+        }
+        
+      }
+    
+    }    
+        
