@@ -1,0 +1,8 @@
+---
+- name: ansible.yml
+  hosts: all
+  tasks:
+  - name: installing git packegs
+    yum: name=git status=latest
+  - name: starting git services
+    services: name=git state=started
