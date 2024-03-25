@@ -1,3 +1,3 @@
 FROM nginx:lates
-EXPOSE 80
+EXPOSE 81
 RUN apt update -y
