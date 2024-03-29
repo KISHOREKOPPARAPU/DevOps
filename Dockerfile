@@ -1,2 +1,2 @@
 FROM nginx:latest
-EXPOSE 81
+EXPOSE 80
