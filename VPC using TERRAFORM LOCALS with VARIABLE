@@ -1,0 +1,33 @@
+vi main.tf
+provider "aws" {
+region = "us-east-1"
+}
+locals {
+cloud_env = "${var.tag}"
+}
+resource "aws_vpc" "staging_vpc" {
+cidr_block = "10.8.0.0/16"
+tags = {
+Name = "${local.cloud_env}-vpc-id"
+}
+}
+resource "aws_subnet" "staging_subnet" {
+vpc_id = aws_vpc.staging_vpc.id
+cidr_block = "10.8.0.0/24"
+tags = {
+Name = "${local.cloud_env}-subnet-id"
+}
+}
+resource "aws_instance" "ec2" {
+ami = "ami-051f8a213df8bc089"
+instance_type = "t2.micro"
+subnet_id = aws_subnet.staging_subnet.id
+tags = {
+Name = "${local.cloud_env}-user-1"
+}
+}
+variable "tag" {
+description = "eneter tag value"
+type = string
+default = "QA"
+}
