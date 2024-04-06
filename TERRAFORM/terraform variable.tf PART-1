@@ -94,7 +94,7 @@ variable "project_env" {
 description = "ec2-project-envrts"
 type = map(string)
 default = {
-project = "project-alpha"
+project = "project-alpha",
 environment = "dev"
 }
 }
