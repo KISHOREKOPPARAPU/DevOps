@@ -1,0 +1,14 @@
+provider "aws" {
+region = "us-east-1"
+}
+resource "aws_instance" "ec2-example" {
+ami = "ami-051f8a213df8bc089"
+count = 3
+instance_type = "t2.micro"
+tags = {
+Name = "user-1"
+}
+}
+output "my_console_output" {
+value = ["${aws_instance.ec2-example.*.public_ip}"]
+}  
