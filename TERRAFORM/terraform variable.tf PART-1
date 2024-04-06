@@ -86,9 +86,7 @@ default = ["user1","user2","user3"]
 
 MAP
 
-tags = {
-Name = var.project_env
-}
+tags = var.project_env
 }
 variable "project_env" {
 description = "ec2-project-envrts"
