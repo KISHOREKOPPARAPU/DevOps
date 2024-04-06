@@ -61,3 +61,40 @@ description = "ec2-public-ip-address"
 type = bool
 default = true
 }
+
+List:
+provider "aws" {
+region = "us-east-1"
+}
+resource "aws_instance" "ec2" {
+ami = "ami-ami id"  #instance id
+instance_type = "t2.micro"
+count = 1
+tags = {
+Name = "terraform"
+}
+}
+resource "aws_iam_user" "my_iam" {
+count = length(var.user_names)
+name = var.user_names[count.index]
+}
+varaiable "user_names" {
+description = "ec2-IAM -user"
+type = list(string)
+default = ["user1","user2","user3"]
+}
+
+MAP
+
+tags = {
+Name = var.project_env
+}
+}
+variable "project_env" {
+description = "ec2-project-envrts"
+type = map(string)
+default = {
+project = "project-alpha"
+environment = "dev"
+}
+}
