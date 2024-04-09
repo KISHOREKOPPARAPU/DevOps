@@ -1,9 +1,10 @@
 provider "aws" {
 region = "us-east-1"
 }
-resource "aws_instance" "ec2-user" {
-ami = "ami-ami.id"
-instance_type = "t2.micro"
+resource "aws_vpc" "my_vpc" {
+cidr_block = "10.8.0.0/16"
+tags = { 
+Name = "my-vpc-1"
 tags = {
 Name = "my_ec2"
 }
@@ -20,7 +21,7 @@ locals {
 }
 resource "aws_security_group" "main" {
    name   = "resource_with_dynamic_block"
-   vpc_id = data.aws_vpc.main.id
+   vpc_id = data.aws_vpc.my_vpc.id
    dynamic "ingress" {
       for_each = local.ingress_rules
   content {
