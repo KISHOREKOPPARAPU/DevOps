@@ -1,0 +1,22 @@
+provider "aws" {
+region = "us-east-1"
+}
+resource "aws_instance" "ec2-example" {
+ami = "ami-051f8a213df8bc089"
+instance_type = "t2.micro"
+tags = {
+Name = "terraform ec2"
+}
+}
+data "aws_instance" "myawsinstance" {
+filter {
+name = "tag:Name"
+values = ["terraform ec2"]
+}
+depends_on = [
+aws_instance.ec2-example
+]
+}
+output "fetched_info" {
+value = data.aws_instance.myawsinstance
+}
