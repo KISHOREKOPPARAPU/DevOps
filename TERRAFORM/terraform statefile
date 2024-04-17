@@ -1,0 +1,20 @@
+provider "aws" {
+region = "us-east-1"
+}
+resource "aws_instance" "ec2-example" {
+ami = "ami-051f8a213df8bc089"
+instance_type = "t2.micro"
+tags = {
+Name = "ec2-1"
+}
+}
+terraform {
+backend "s3" {
+bucket = "s3fullaccess7777"
+key = "key/terraform.tfvars"
+region = "us-east-1"
+}
+}
+output "public_ip" {
+value = aws_instance.ec2-example.public_ip
+}
