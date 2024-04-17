@@ -1,0 +1,37 @@
+provider "aws" {
+region = "us-east-1"
+}
+resource "aws_vpc" "aws-vpc"{
+cidr_block = "10.8.0.0/16"
+tags = {
+Name = "vpc-s"
+}
+}
+resource "aws_subnet" "subnet-1" {
+cidr_block = "10.8.0.0/24"
+vpc_id = aws_vpc.aws-vpc.id
+tags = {
+Name = "subnet-1"
+}
+}
+resource "aws_instance" "ec2-example" {
+ami = "ami-051f8a213df8bc089"
+subnet_id = aws_subnet.subnet-1.id
+instance_type = "t2.micro"
+tags = {
+Name = "terraform ec2"
+}
+}
+data "aws_instance" "myawsinstance" {
+instance_id = "i-06e0ef3a6aa11c17c"
+filter {
+name = "tag:Name"
+values = ["terraform ec2"]
+}
+depends_on = [
+aws_instance.ec2-example
+]
+}
+output "fetched_info" {
+value = data.aws_instance.myawsinstance
+}
