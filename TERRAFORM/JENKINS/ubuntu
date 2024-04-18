@@ -45,18 +45,6 @@ resource "aws_instance" "jenkins" {
   tags = {
     Name = "jenkins-instance"
   }
-}
-
-resource "aws_instance" "jenkins" {
-  ami                         = "ami-080e1f13689e07408"
-  instance_type               = "t2.micro"
-  key_name                    = "debian"
-  vpc_security_group_ids      = [aws_security_group.ec2_security_group.id]
-  associate_public_ip_address = false
-
-  tags = {
-    Name = "jenkins-instance"
-  }
   user_data = <<-EOF
     #!/bin/bash
     # Installing Java
