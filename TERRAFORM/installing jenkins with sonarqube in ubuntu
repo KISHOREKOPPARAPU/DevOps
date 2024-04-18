@@ -56,14 +56,12 @@ resource "aws_instance" "jenkins" {
         /etc/apt/sources.list.d/jenkins.list > /dev/null
     sudo apt-get update -y
     sudo apt-get install jenkins -y
-    # installing docker
-
+    
+# installing docker
      sudo apt-get update -y
-     sudo apt-get install docker
-     sudo systemctl start docker
-     sudo systemctl enable docker
-     sudo systemctl status docker
-     docker run -itd --name sonar -p 9000:9000 soanrQube
-
+     sudo apt-get install docker.io -y
+     sudo usermod -aG docker ubantu
+     sudo chmod 777 /var/eun/docker.sock
+     docker run -d --name sonar -p 9000:9000 soanrqube
    EOF
 }
