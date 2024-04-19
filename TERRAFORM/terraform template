@@ -1,0 +1,31 @@
+provider "aws" {
+  region = "us-east-1"
+}
+
+resource "aws_iam_policy" "s3_policy" {
+  name        = "S3PutObjectPolicy"
+  description = "Allows PutObject action on S3 bucket"
+
+  policy = <<EOF
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Sid": "Stmt1713507685681",
+      "Action": [
+        "s3:PutObject"
+      ],
+      "Effect": "Allow",
+      "Resource": "arn:aws:s3:::s3full77/*"
+    }
+  ]
+}
+EOF
+}
+data "aws_s3_bucket" "example" {
+  bucket = "s3full77"
+}
+
+output "policy_json" {
+  value = aws_iam_policy.s3_policy.policy
+}
