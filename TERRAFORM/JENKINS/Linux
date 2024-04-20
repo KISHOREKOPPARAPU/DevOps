@@ -50,7 +50,7 @@ resource "aws_instance" "jenkins" {
     #!/bin/bash
     # Installing Java
     sudo yum update -y
-    sudo amazon-linux-extras install java-openjdk11 -y
+    sudo yum install java-openjdk11 -y
     java --version
 
     # Installing wget and necessary packages for HTTP and HTTPS
