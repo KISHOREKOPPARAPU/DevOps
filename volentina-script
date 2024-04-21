@@ -1,0 +1,37 @@
+pipeline {
+    agent any 
+    stages {
+        stage ('Git Checkout') {
+            steps {
+                git branch: 'master', url: 'https://github.com/KISHOREKOPPARAPU/DevOps.git'
+            }
+        }
+        stage ('Trivy FileSystem Scan') {
+            steps {
+                sh "trivy fs . > trivyfs.txt"
+            }
+        }
+        stage ('Build & Tag Docker Image') {
+            steps {
+                script {
+                    
+                    sh "docker build -t kopparapukishore/valentine:v1 ."
+                    sh "docker tag kopparapukishore/valentine:v1 kopparapukishore/valentine:v1"
+                    withDockerRegistry(credentialsId: 'docker', toolName: 'docker') {
+                        sh "docker push kopparapukishore/valentine:v1"
+                    }
+                }
+            }
+        }
+        stage ('Trivy Image Scan') {
+            steps {
+                sh "trivy image kopparapukishore/valentine:v1 > trivy.txt"
+            }
+        }
+        stage ('Deploy To Container') {
+            steps {
+                sh "docker run -d --name voldays -p 8081:80 kopparapukishore/valentine:v1"
+            }
+        }
+    }
+}
