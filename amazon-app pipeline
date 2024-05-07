@@ -1,0 +1,83 @@
+pipeline {
+    agent any 
+    tools {
+        jdk 'jdk17'
+        nodejs 'node16'
+    }
+    environment {
+        SCANNER_HOME=tool 'sonar-scanner'
+    }
+    stages {
+        stage ('CW') {
+            steps {
+                cleanWs()
+            }
+        }
+        stage ('checkout from git') {
+            steps {
+                git branch: 'main', changelog: false, poll: false, url: 'https://github.com/KISHOREKOPPARAPU/amazon-app.git'
+            }
+        }
+        stage ('SONAR') {
+            steps {
+                script {
+                 withSonarQubeEnv('sonar-server') {
+                 sh ''' 
+                 $SCANNER_HOME/bin/sonar-scanner -Dsonar.projectName=Amazon \
+                 -Dsonar.sources=./ \
+                 -Dsonar.projectKey=Amazon ''' 
+               }
+                }
+            }
+        }
+        stage ('QG') {
+            steps {
+                script {
+                waitForQualityGate abortPipeline: false, credentialsId: 'sonar-token'
+            }
+        }
+        }
+        stage ('NPM') {
+            steps {
+                script {
+                sh 'npm install'
+            }
+        }
+        }
+        stage('OWASP Dependency Check') {
+            steps {
+                dependencyCheck additionalArguments: "--scan ./ --disableYarnAudit --disableNodeAudit", odcInstallation: 'DP-check'
+                dependencyCheckPublisher pattern: '**/dependency-check-report.xml'
+            }
+        }
+        stage('Trivy FS SCAN') {
+            steps {
+                sh "trivy fs . > trivy.txt"
+            }
+        }
+        stage ('Docker Build & Docker Push') {
+            steps {
+                script {
+                    withDockerRegistry(credentialsId: 'docker', toolName: 'Docker') {
+                    sh '''
+                    docker build -t amazon .
+                    docker tag amazon kopparapukishore/amazon:latest
+                    docker push kopparapukishore/amazon:latest
+                    '''
+                }
+                }
+            }
+        }
+        stage('TRIVY IMAGE') {
+            steps {
+                sh "trivy image kopparapukishore/amazon:latest > TRIVYIMAGE.txt"
+            }
+        }
+        stage ('Amazon App') {
+            steps {
+                sh 'docker run -d --name amazon -p 3000:3000 kopparapukishore/amazon:latest'
+            }
+        }
+        
+}
+}
