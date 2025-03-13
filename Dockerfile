@@ -1,8 +1,5 @@
 FROM nginx:latest
 
-# this is kishore 
-// hello devops //
-
 # Copy HTML and CSS files to the Nginx default html directory
 COPY finally.html yes.html nextpage.html style.css /usr/share/nginx/html/
 
